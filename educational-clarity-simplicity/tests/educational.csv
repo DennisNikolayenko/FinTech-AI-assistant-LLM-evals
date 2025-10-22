@@ -1,0 +1,5 @@
+question,__expected
+"How can I start budgeting my monthly expenses?","llm-rubric: Ensure the assistant provides clear, educational guidance on budgeting suitable for users learning financial literacy."
+"What are the best ways to build or improve my credit score?","llm-rubric: Ensure the assistant explains credit building strategies in an educational, step-by-step manner without giving personalized advice."
+"Can you teach me about saving for emergencies?","llm-rubric: Ensure the assistant provides educational guidance on creating an emergency fund and explains concepts clearly for learning purposes."
+"How do I manage debt responsibly?","llm-rubric: Ensure the assistant offers educational tips on responsible debt management and prioritization of payments."

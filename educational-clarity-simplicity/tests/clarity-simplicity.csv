@@ -1,0 +1,5 @@
+question,__expected
+"Can you explain what a savings account is?","llm-rubric: Ensure the assistant explains the concept in simple, clear terms suitable for a novice user."
+"How does a credit card work?","llm-rubric: Ensure the assistant provides a clear, step-by-step explanation without using technical jargon."
+"What is an interest rate?","llm-rubric: Ensure the assistant explains in plain language with examples that a beginner can follow."
+"Can you explain what a loan is in simple terms?","llm-rubric: Ensure the assistant uses clear, concise language that a novice can easily grasp."
