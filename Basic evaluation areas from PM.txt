@@ -1,0 +1,64 @@
+
+
+🧩 FinTech AI Assistant — Key Testing Areas (as defined by the Product Manager)
+You are a Product Manager for a FinTech company that’s developing an AI-based assistant (chatbot) similar to ChatGPT.The assistant uses a large language model (LLM) to help customers with questions related to the company’s products, services, and financial tools.
+As Product Manager, you’ve identified core functional and non-functional testing areas that must be validated before deployment.You’re now presenting these to the LLM Tester (me) to design detailed evaluation plans and prompt-based tests.
+
+1. Domain Knowledge & Financial Accuracy
+	•	Evaluate the assistant’s understanding of key financial concepts: interest rates, APR, credit scores, investment risk, account types, etc.
+	•	Test for accuracy when explaining company-specific products or comparing product tiers.
+	•	Check for hallucinations or fabrication of nonexistent products.
+
+2. Regulatory & Compliance Adherence
+	•	Ensure the assistant never gives personalized investment or lending advice.
+	•	Validate correct usage of disclaimers (e.g., “This does not constitute financial advice”).
+	•	Test for compliance with local and global frameworks (e.g., GDPR, KYC, AML).
+	•	Evaluate how it handles requests for sensitive data — should reject or redirect.
+
+3. Product Navigation & Troubleshooting Support
+	•	Verify that the assistant can guide users through app or web portal processes (e.g., applying for a loan, resetting passwords).
+	•	Check contextual understanding of multi-step processes (e.g., loan application steps).
+	•	Test troubleshooting flows for common user issues.
+
+4. Customer Service & Empathy Handling
+	•	Assess emotional tone and empathy in responses to upset or anxious users.
+	•	Ensure balance between professionalism and friendliness.
+	•	Simulate edge cases like declined transactions or fraud reports.
+
+5. Conversational Context & Memory Management
+	•	Check if the assistant can maintain conversation context within a session.
+	•	Validate correct referencing of prior messages (no contradictions or forgotten info).
+	•	Ensure no persistence of personal data after session ends.
+
+6. Personalization & Dynamic Adaptation
+	•	Evaluate ability to tailor responses to user segments (e.g., new vs. premium customer).
+	•	Test whether tone and recommendations adapt appropriately.
+	•	Confirm personalization boundaries — it must not infer or assume data beyond session context.
+
+7. Data Privacy & Security Controls
+	•	Test resistance to prompt injection or attempts to extract system prompts.
+	•	Ensure refusal to share internal or confidential business data.
+	•	Evaluate redaction of sensitive inputs like SSNs, account numbers, or card details.
+
+8. Transparency & Explainability
+	•	Verify that the assistant can explain how it arrived at an answer (where applicable).
+	•	Test self-correction behavior: when it’s unsure, it should acknowledge uncertainty rather than fabricate.
+
+9. Performance & Reliability
+	•	Evaluate latency, uptime, and error-handling resilience.
+	•	Simulate high-traffic conditions.
+	•	Test retry logic, fallback responses, and graceful degradation under load.
+
+10. Multimodal and Multichannel Consistency
+	•	Verify behavior consistency across web chat, mobile app, and voice interface.
+	•	Test response equivalence for identical queries in different channels.
+
+11. Ethical & Fairness Testing
+	•	Ensure no bias in responses related to gender, ethnicity, or socioeconomic status.
+	•	Test how the model responds to sensitive financial eligibility topics (e.g., loan denials).
+
+12. User Education & Proactive Guidance
+	•	Assess ability to provide educational content on financial literacy topics (e.g., budgeting, credit building).
+	•	Evaluate clarity and simplicity of explanations for novice users.
+
+💡 Next step for the LLM Tester:For each testing area, design evaluation prompts, expected behaviors, and grading metrics (e.g., accuracy, compliance, empathy, latency).The goal is to convert these key areas into structured prompt tests and evaluation sets that can be run in tools like Promptfoo, TruLens, or Evalute.

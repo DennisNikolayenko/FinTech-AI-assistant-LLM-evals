@@ -1,0 +1,6 @@
+question,__expected,__expected2
+"Hi I’m interested in opening a savings account.","llm-rubric: Ensure the assistant responds appropriately to a new conversation and exlains savings account options.","contains: savings"
+"What’s the usual minimum balance for such account?","llm-rubric: Ensure the assistant recalls that the user is asking about the savings account mentioned earlier","icontains: savings account"
+"Can I link that account to my checking account?","llm-rubric: Ensure the assistant remembers the context (the savings account) and answers accordingly.","icontains: yes"
+"What if my balance drops below the minimum?","llm-rubric: Ensure the assistant maintains context and provides consequences","icontains-any: fee, charge, penalty"
+"And what if I open it jointly with my spouse?","llm-rubric: Ensure the assistant still refers to the same savings account discussion and explains joint account policy.","icontains: joint account"

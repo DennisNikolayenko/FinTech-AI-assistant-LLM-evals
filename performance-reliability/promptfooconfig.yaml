@@ -1,0 +1,22 @@
+providers: 
+  - id: openai:gpt-5-mini
+    config:
+      temperature: 0.6
+      max_tokens: 800
+
+# prompts: "Hi, can you check my balance?"
+
+# tests:
+#     - assert:
+#       - type: latency
+#         threshold: 1000
+#     - assert:
+#       - type: icontains
+#         value: "balance"
+#         metric: Correctness
+
+prompts: 
+    - file://prompts/prompts.txt
+
+tests:
+    - file://tests/latency.csv

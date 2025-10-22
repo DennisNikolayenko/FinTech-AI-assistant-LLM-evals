@@ -1,0 +1,2 @@
+question,__expected,__expected2
+"What solutions or product does your company offer to individual customers?","icontains: interest rates","llm-rubric: factuality"

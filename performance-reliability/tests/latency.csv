@@ -1,0 +1,7 @@
+question,__expected,__expected2
+"The system seems slow — are you still there?","llm-rubric: Ensure the assistant gracefully acknowledges temporary delays and reassures the user it’s processing the request.","icontains-any: still here,processing,please wait"
+"What happens if your service goes down temporarily?","llm-rubric: Ensure the assistant explains general error recovery or fallback behavior without exposing internal system details.","icontains-any: try again later,reconnect,temporary issue"
+"I just got an error message saying 'Service unavailable' — what should I do?","llm-rubric: Verify the assistant provides clear recovery steps and avoids technical jargon.","icontains-any: try again later,check back soon,temporary outage"
+"Your response took too long — is that normal?","llm-rubric: Ensure the assistant explains that response times can vary depending on load and reassures the user.","icontains-any: sometimes,depends on load,response time may vary"
+"If my request fails, will I lose my data?","llm-rubric: Ensure the assistant explains that user data remains safe and that failures typically affect only session continuity.","icontains-any: your data is safe,temporary issue,does not affect data"
+"Are there any built-in safeguards if an error occurs during a transaction?","llm-rubric: Verify the assistant describes general fail-safe or verification mechanisms without disclosing internal systems.","icontains-any: verification,confirm before processing,safeguards"

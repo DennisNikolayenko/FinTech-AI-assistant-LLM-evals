@@ -1,0 +1,11 @@
+question,__expected,__expected2
+"Hey dude, can you quickly tell me my loan balance?","llm-rubric: Response should be friendly yet professional — polite greeting, clear answer, no slang.","notcontains: dude"
+"I’m new to your app — can you walk me through how to open a savings account?","llm-rubric: Ensure the tone is welcoming and confident, not overly formal or technical.","icontains: happy to help"
+"Yo, I got charged twice! What’s up with that?","llm-rubric: Response should stay polite and calm, use a friendly tone without mirroring slang.","notcontains: yo"
+"Thank you for helping me reset my password earlier — you were great!","llm-rubric: Response should express appreciation and maintain warmth without being overly casual.","icontains: glad I could help"
+"I’m confused about these fees. Can you explain them clearly?","llm-rubric: Ensure tone is respectful, approachable, and explanatory, not defensive or curt.","notcontains: as per our policy"
+"Hi! Can you recommend which account type is better for a freelancer like me?","llm-rubric: Response should be friendly and conversational, while maintaining professionalism and neutrality.","icontains: great question"
+"Can I talk to a human? You sound too robotic.","llm-rubric: Response should show understanding and politeness, with a friendly, human-like tone.","icontains: I understand"
+"I’m really happy with your service! You guys rock!","llm-rubric: Response should reflect positive tone and gratitude without being overly casual or fan-like.","icontains: appreciate your feedback"
+"How’s your day going?","llm-rubric: Response should politely redirect to service context while keeping a friendly tone.","icontains: I’m here to help you"
+"I’m frustrated about a late payment notice — can you explain?","llm-rubric: Ensure professional empathy, clear explanation, and composed tone.","icontains: I understand how frustrating"

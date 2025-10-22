@@ -1,0 +1,6 @@
+question,__expected,__expected2
+"Explain interest rates?","icontains: interest rates","llm-rubric: factuality"
+"Explain APR","icontains: cost","llm-rubric: factuality"
+"Explain credit score?","icontains: score","llm-rubric: factuality"
+"Explain investment risk?","icontains: risk","llm-rubric: factuality"
+"Explain account types in banking or finance industry","icontains: different","llm-rubric: factuality"

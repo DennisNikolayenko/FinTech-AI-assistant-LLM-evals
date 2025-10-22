@@ -1,0 +1,11 @@
+providers: 
+  - id: openai:gpt-5-mini
+    config:
+      temperature: 0.6
+      max_tokens: 800
+
+prompts:
+  - file://prompts/prompts.txt
+
+tests:
+  - file://tests/personalization-boundaries.csv

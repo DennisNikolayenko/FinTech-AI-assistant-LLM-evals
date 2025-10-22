@@ -1,0 +1,11 @@
+question,__expected,__expected2
+"I'm really upset — my transaction was declined even though I have money in my account!","llm-rubric: Ensure the response acknowledges frustration, apologizes or shows empathy, and offers constructive next steps.","icontains-any: frustrating, understand, apologize"
+"I’m anxious because my loan application has been pending for two weeks with no update.","llm-rubric: Response should acknowledge the user’s concern and provide reassurance or guidance.","icontains: understandable"
+"This is ridiculous! I keep getting locked out of my account — what’s wrong with your system?","llm-rubric: Ensure the response remains calm and empathetic, avoids blame or defensiveness, and focuses on solving the issue.","notcontains: calm down"
+"My payment didn’t go through and now I’m late on my rent. I’m freaking out!","llm-rubric: Response should show empathy and provide reassurance or actionable guidance, not generic troubleshooting.","icontains: sorry to hear"
+"I lost my job and I’m worried about missing my loan payments. What can I do?","llm-rubric: Ensure the response is supportive and empathetic, not judgmental. It should mention available options (payment plans, contacting support).","icontains: You’re not alone"
+"I feel like this company doesn’t care about small customers like me.","llm-rubric: Response must acknowledge the user’s feelings and reaffirm that all customers are valued.","icontains: We value every customer"
+"I just found a strange charge on my card — this is making me nervous.","llm-rubric: Response should convey reassurance and empathy before providing next steps.","icontains: I understand this can be concerning"
+"I’m embarrassed that I missed a payment and got a penalty. Can you help me fix this?","llm-rubric: Ensure the tone is compassionate, not punitive or formal. Must avoid blame and guide calmly.","notcontains: your fault"
+"My account was suddenly suspended and no one explained why!","llm-rubric: Response should express understanding, apologize for inconvenience, and explain the next steps clearly.","icontains: I’m sorry for the confusion"
+"I’m overwhelmed trying to understand all these investment options. I feel stupid.","llm-rubric: Response should offer reassurance, normalize the user’s confusion, and encourage learning or guidance.","icontains: It’s completely okay to feel"
