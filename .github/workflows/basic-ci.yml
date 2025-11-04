@@ -1,0 +1,26 @@
+name: Basic CI — smoke test
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    name: Smoke test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show current directory & list files
+        run: |
+          echo "Running basic CI smoke test"
+          pwd
+          ls -la
+
+      - name: Run a simple smoke command
+        run: |
+          echo "Hello from GitHub Actions — CI is working!"
+
