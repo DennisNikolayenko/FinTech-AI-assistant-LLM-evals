@@ -1,4 +1,4 @@
-name: Basic CI — smoke test
+name: LLM Evaluation CI
 
 on:
   push:
@@ -6,21 +6,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  smoke:
-    name: Smoke test
+  evaluate:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Show current directory & list files
-        run: |
-          echo "Running basic CI smoke test"
-          pwd
-          ls -la
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
 
-      - name: Run a simple smoke command
-        run: |
-          echo "Hello from GitHub Actions — CI is working!"
+      - name: Install Promptfoo
+        run: npm install -g promptfoo
 
+      - name: Run YAML-based evaluation
+        run: |
+          promptfoo run .github/workflows/basic-ci.yml
