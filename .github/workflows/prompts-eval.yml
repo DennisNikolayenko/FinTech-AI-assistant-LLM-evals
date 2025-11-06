@@ -133,7 +133,7 @@ jobs:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          config: '${{ matrix.folder }}/promptfooconfig.yaml'
+          config: '${{ matrix.folder }}/promptfooconfig.yml'
  
       - name: Run evaluation and generate report
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -148,7 +148,7 @@ jobs:
           cd ${{ matrix.folder }}
           
           # Run evaluation
-          promptfoo eval -c promptfooconfig.yaml
+          promptfoo eval -c promptfooconfig.yml
           
           # Generate HTML report from evaluation results
           promptfoo view --output ../promptfoo-results/${{ matrix.folder }}/report.html
