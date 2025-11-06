@@ -3,25 +3,116 @@ name: 'Prompt Evaluation'
 on:
   pull_request:
     paths:
-      - 'prompts/*.txt'
-      - 'promptfooconfig.yaml'
+      - 'context-memory/**'
+      - 'customer-service-empathy/**'
+      - 'data-privacy-security/**'
+      - 'domain-and-financial-factuality/**'
+      - 'educational-clarity-simplicity/**'
+      - 'ethical-fairness-bias/**'
+      - 'performance-reliability/**'
+      - 'personalization-assumptions/**'
+      - 'product-navigation-troubleshooting/**'
+      - 'regulatory-compliance-adherence/**'
+      - 'transparency-explainability/**'
       - '.github/workflows/*.yml'
   push:
     branches:
       - main
     paths:
-      - 'prompts/*.txt'
-      - 'promptfooconfig.yaml'
+      - 'context-memory/**'
+      - 'customer-service-empathy/**'
+      - 'data-privacy-security/**'
+      - 'domain-and-financial-factuality/**'
+      - 'educational-clarity-simplicity/**'
+      - 'ethical-fairness-bias/**'
+      - 'performance-reliability/**'
+      - 'personalization-assumptions/**'
+      - 'product-navigation-troubleshooting/**'
+      - 'regulatory-compliance-adherence/**'
+      - 'transparency-explainability/**'
       - '.github/workflows/*.yml'
   workflow_dispatch:
 
 jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      folders: ${{ steps.filter.outputs.folders }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed folders
+        id: filter
+        run: |
+          # Define all category folders
+          ALL_FOLDERS=(
+            "context-memory"
+            "customer-service-empathy"
+            "data-privacy-security"
+            "domain-and-financial-factuality"
+            "educational-clarity-simplicity"
+            "ethical-fairness-bias"
+            "performance-reliability"
+            "personalization-assumptions"
+            "product-navigation-troubleshooting"
+            "regulatory-compliance-adherence"
+            "transparency-explainability"
+          )
+          
+          # For workflow_dispatch or first push, test all folders
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]] || [[ -z "${{ github.event.before }}" ]]; then
+            CHANGED_FOLDERS=$(printf '%s\n' "${ALL_FOLDERS[@]}" | jq -R . | jq -s -c .)
+            echo "folders=$CHANGED_FOLDERS" >> $GITHUB_OUTPUT
+            echo "Testing all folders (manual trigger or first push)"
+            exit 0
+          fi
+          
+          # Get changed files
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }})
+          else
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          fi
+          
+          # Find which folders changed
+          CHANGED_FOLDERS=()
+          for folder in "${ALL_FOLDERS[@]}"; do
+            if echo "$CHANGED_FILES" | grep -q "^$folder/"; then
+              CHANGED_FOLDERS+=("$folder")
+            fi
+          done
+          
+          # Check if workflow file changed - if so, test all folders
+          if echo "$CHANGED_FILES" | grep -q "^.github/workflows/"; then
+            echo "Workflow changed, testing all folders"
+            CHANGED_FOLDERS=("${ALL_FOLDERS[@]}")
+          fi
+          
+          # Convert to JSON array
+          if [ ${#CHANGED_FOLDERS[@]} -eq 0 ]; then
+            echo "folders=[]" >> $GITHUB_OUTPUT
+            echo "No relevant folders changed"
+          else
+            JSON_FOLDERS=$(printf '%s\n' "${CHANGED_FOLDERS[@]}" | jq -R . | jq -s -c .)
+            echo "folders=$JSON_FOLDERS" >> $GITHUB_OUTPUT
+            echo "Changed folders: ${CHANGED_FOLDERS[*]}"
+          fi
+
   evaluate:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.folders != '[]'
     runs-on: ubuntu-latest
     environment: promptfoo
     permissions:
       pull-requests: write
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        folder: ${{ fromJson(needs.detect-changes.outputs.folders) }}
     
     steps:
       - name: Checkout code
@@ -42,7 +133,7 @@ jobs:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          config: 'promptfooconfig.yaml'
+          config: '${{ matrix.folder }}/promptfooconfig.yaml'
  
       - name: Run evaluation and generate report
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -51,35 +142,57 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           # Create output directory
-          mkdir -p promptfoo-results
+          mkdir -p promptfoo-results/${{ matrix.folder }}
+          
+          # Navigate to the folder and run evaluation
+          cd ${{ matrix.folder }}
           
           # Run evaluation
           promptfoo eval -c promptfooconfig.yaml
           
           # Generate HTML report from evaluation results
-          promptfoo view --output promptfoo-results/report.html
+          promptfoo view --output ../promptfoo-results/${{ matrix.folder }}/report.html
           
           # Also export JSON results for programmatic access
-          promptfoo export promptfoo-results/results.json
+          promptfoo export ../promptfoo-results/${{ matrix.folder }}/results.json
  
       - name: Upload evaluation results
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: promptfoo-results-${{ github.sha }}
-          path: promptfoo-results/
+          name: promptfoo-results-${{ matrix.folder }}-${{ github.sha }}
+          path: promptfoo-results/${{ matrix.folder }}/
           retention-days: 30
           if-no-files-found: warn
 
       - name: Add results to workflow summary
         if: always() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         run: |
-          echo "## 📊 Prompt Evaluation Results" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 Prompt Evaluation Results - ${{ matrix.folder }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Evaluation completed successfully" >> $GITHUB_STEP_SUMMARY
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "✅ Evaluation completed successfully" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Evaluation failed" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Artifacts" >> $GITHUB_STEP_SUMMARY
-          echo "- HTML Report: \`promptfoo-results/report.html\`" >> $GITHUB_STEP_SUMMARY
-          echo "- JSON Results: \`promptfoo-results/results.json\`" >> $GITHUB_STEP_SUMMARY
+          echo "- HTML Report: \`promptfoo-results/${{ matrix.folder }}/report.html\`" >> $GITHUB_STEP_SUMMARY
+          echo "- JSON Results: \`promptfoo-results/${{ matrix.folder }}/results.json\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Download artifacts from the workflow run to view detailed results." >> $GITHUB_STEP_SUMMARY
+
+  summary:
+    needs: [detect-changes, evaluate]
+    if: always() && needs.detect-changes.outputs.folders != '[]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate overall summary
+        run: |
+          echo "# 🎯 Prompt Evaluation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tested folders:** ${{ needs.detect-changes.outputs.folders }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ needs.evaluate.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View individual test results in the artifacts section above." >> $GITHUB_STEP_SUMMARY
