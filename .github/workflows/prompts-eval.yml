@@ -72,4 +72,4 @@ jobs:
           path: |
             promptfoo-results/
           retention-days: 30
-          if-no-files-found: war
+          if-no-files-found: warn
