@@ -1,4 +1,5 @@
 name: 'Prompt Evaluation'
+
 on:
   pull_request:
     paths:
@@ -21,6 +22,7 @@ jobs:
     permissions:
       pull-requests: write
       contents: read
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,16 +31,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          # Remove the cache option that's causing the error
-          # cache: 'npm'
 
-      - name: Set up promptfoo cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/promptfoo
-          key: ${{ runner.os }}-promptfoo-v1
-          restore-keys: |
-            ${{ runner.os }}-promptfoo-
       - name: Install promptfoo
         run: npm install -g promptfoo
 
@@ -49,11 +42,9 @@ jobs:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          prompts: 'prompts/*.txt'
           config: 'promptfooconfig.yaml'
-          cache-path: ~/.cache/promptfoo
  
-      - name: Generate HTML report
+      - name: Run evaluation and generate report
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -61,15 +52,34 @@ jobs:
         run: |
           # Create output directory
           mkdir -p promptfoo-results
-          # Generate HTML report directly with eval command
-          promptfoo eval -c promptfooconfig.yaml --output promptfoo-results/report.html
+          
+          # Run evaluation
+          promptfoo eval -c promptfooconfig.yaml
+          
+          # Generate HTML report from evaluation results
+          promptfoo view --output promptfoo-results/report.html
+          
+          # Also export JSON results for programmatic access
+          promptfoo export promptfoo-results/results.json
  
       - name: Upload evaluation results
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
           name: promptfoo-results-${{ github.sha }}
-          path: |
-            promptfoo-results/
+          path: promptfoo-results/
           retention-days: 30
           if-no-files-found: warn
+
+      - name: Add results to workflow summary
+        if: always() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        run: |
+          echo "## 📊 Prompt Evaluation Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Evaluation completed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- HTML Report: \`promptfoo-results/report.html\`" >> $GITHUB_STEP_SUMMARY
+          echo "- JSON Results: \`promptfoo-results/results.json\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Download artifacts from the workflow run to view detailed results." >> $GITHUB_STEP_SUMMARY
